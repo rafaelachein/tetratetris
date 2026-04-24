@@ -261,7 +261,12 @@ function update(time = 0) {
     lastTime = time;
 
     elapsedTime = Math.floor((time - startTime) / 1000);
-    timerElement.textContent = "Time: " + elapsedTime + "s";
+
+    const hours = String(Math.floor(elapsedTime / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((elapsedTime % 3600) / 60)).padStart(2, "0");
+    const seconds = String(elapsedTime % 60).padStart(2, "0");
+
+    timerElement.textContent = `Time: ${hours}:${minutes}:${seconds}`;
 
     dropCounter += deltaTime;
 
