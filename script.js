@@ -27,7 +27,13 @@ let dropInterval = 1000;
 let lastTime = 0;
 let gameStarted = false;
 
+let startTime = 0;
+let elapsedTime = 0;
+let level = 1;
+
 const scoreElement = document.getElementById("score");
+const timerElement = document.getElementById("timer");
+const levelElement = document.getElementById("level");
 const startScreen = document.getElementById("start-screen");
 
 function createMatrix(w, h) {
@@ -139,8 +145,10 @@ function arenaSweep() {
     ++y;
 
     player.score += rowCount * 10;
-    updateScore();
     rowCount *= 2;
+
+    updateScore();
+    updateLevel();
   }
 }
 
@@ -188,17 +196,31 @@ function playerReset() {
   const pieces = "TJLOSZI";
   player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
   player.pos.y = 0;
-  player.pos.x = Math.floor(arena[0].length / 2) - Math.floor(player.matrix[0].length / 2);
+  player.pos.x =
+    Math.floor(arena[0].length / 2) -
+    Math.floor(player.matrix[0].length / 2);
 
   if (collide(arena, player)) {
     arena.forEach(row => row.fill(0));
     player.score = 0;
+    level = 1;
+    dropInterval = 1000;
+    startTime = performance.now();
+
     updateScore();
+    updateLevel();
   }
 }
 
 function updateScore() {
   scoreElement.textContent = "Score: " + player.score;
+}
+
+function updateLevel() {
+  level = Math.floor(player.score / 100) + 1;
+  levelElement.textContent = "Level: " + level;
+
+  dropInterval = Math.max(150, 1000 - (level - 1) * 100);
 }
 
 function playerRotate(dir) {
@@ -238,6 +260,9 @@ function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
 
+    elapsedTime = Math.floor((time - startTime) / 1000);
+    timerElement.textContent = "Time: " + elapsedTime + "s";
+
     dropCounter += deltaTime;
 
     if (dropCounter > dropInterval) {
@@ -255,6 +280,7 @@ document.addEventListener("keydown", event => {
     startScreen.style.display = "none";
     dropCounter = 0;
     lastTime = performance.now();
+    startTime = performance.now();
     return;
   }
 
@@ -275,4 +301,5 @@ document.addEventListener("keydown", event => {
 
 playerReset();
 updateScore();
+updateLevel();
 update();

@@ -15,6 +15,12 @@ h1 {
   margin-bottom: 10px;
 }
 
+#timer,
+#level {
+  font-size: 18px;
+  margin: 5px;
+}
+
 #game-area {
   position: relative;
   width: 240px;
