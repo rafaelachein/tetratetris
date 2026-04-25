@@ -52,28 +52,64 @@ canvas {
 }
 
 #mobile-controls {
-  display: grid;
-  grid-template-columns: 64px 64px 64px;
-  grid-template-rows: 64px 64px;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 20px;
-  touch-action: none;
-}
+  position: absolute;
+  left: calc(50% + 250px);
+  top: 710px;
 
-#mobile-controls button {
-  font-size: 34px;
-  border: none;
-  border-radius: 12px;
-  background: #eee;
-  color: black;
-  box-shadow: 0 4px 0 #999;
-  font-weight: bold;
+  display: grid;
+  grid-template-columns: 72px 72px 72px;
+  grid-template-rows: 72px 72px;
+  gap: 10px;
+
+  grid-template-areas:
+    ". up ."
+    "left down right";
+
   touch-action: none;
   user-select: none;
 }
 
-#mobile-controls button:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #777;
+#mobile-controls button {
+  width: 72px;
+  height: 72px;
+  font-size: 38px;
+  border: 3px solid #777;
+  border-radius: 12px;
+  background: #eeeeee;
+  color: black;
+  font-weight: bold;
+  box-shadow: 4px 4px 0 #777;
+  touch-action: none;
+  user-select: none;
+}
+
+#mobile-controls button:active,
+#mobile-controls button.pressed {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 #555;
+  background: #cccccc;
+}
+
+#up-button {
+  grid-area: up;
+}
+
+#left-button {
+  grid-area: left;
+}
+
+#down-button {
+  grid-area: down;
+}
+
+#right-button {
+  grid-area: right;
+}
+
+@media (max-width: 850px) {
+  #mobile-controls {
+    position: static;
+    margin: 24px auto 0;
+    justify-content: center;
+  }
 }
