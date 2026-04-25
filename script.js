@@ -302,48 +302,6 @@ function update(time = 0) {
   requestAnimationFrame(update);
 }
 
-function pressButton(action) {
-  startGame();
-  action();
-}
-
-function startDownHold() {
-  startGame();
-  playerDrop();
-
-  if (downHoldInterval) return;
-
-  downHoldInterval = setInterval(() => {
-    playerDrop();
-  }, 80);
-}
-
-function stopDownHold() {
-  clearInterval(downHoldInterval);
-  downHoldInterval = null;
-}
-
-document.addEventListener("keydown", event => {
-  if (!gameStarted) {
-    startGame();
-    return;
-  }
-
-  if (event.key === "ArrowLeft") {
-    playerMove(-1);
-  } else if (event.key === "ArrowRight") {
-    playerMove(1);
-  } else if (event.key === "ArrowDown") {
-    playerDrop();
-  } else if (event.key === "ArrowUp") {
-    playerRotate(1);
-  } else if (event.key === "q" || event.key === "Q") {
-    playerRotate(-1);
-  } else if (event.key === "w" || event.key === "W") {
-    playerRotate(1);
-  }
-});
-
 function pressVisual(button) {
   button.classList.add("pressed");
 }
@@ -352,13 +310,15 @@ function releaseVisual(button) {
   button.classList.remove("pressed");
 }
 
-function pressGameButton(button, action) {
+function tapButton(button, action) {
   startGame();
   pressVisual(button);
   action();
-}
 
-let downHoldInterval = null;
+  setTimeout(() => {
+    releaseVisual(button);
+  }, 120);
+}
 
 function startDownHold() {
   startGame();
@@ -374,8 +334,11 @@ function startDownHold() {
 
 function stopDownHold() {
   releaseVisual(downButton);
-  clearInterval(downHoldInterval);
-  downHoldInterval = null;
+
+  if (downHoldInterval) {
+    clearInterval(downHoldInterval);
+    downHoldInterval = null;
+  }
 }
 
 document.addEventListener("keydown", event => {
@@ -392,14 +355,8 @@ document.addEventListener("keydown", event => {
     playerDrop();
   } else if (event.key === "ArrowUp") {
     playerRotate(1);
-  } else if (event.key === "q" || event.key === "Q") {
-    playerRotate(-1);
-  } else if (event.key === "w" || event.key === "W") {
-    playerRotate(1);
   }
 });
-
-startScreen.addEventListener("click", startGame);
 
 startScreen.addEventListener("pointerdown", event => {
   event.preventDefault();
@@ -408,30 +365,18 @@ startScreen.addEventListener("pointerdown", event => {
 
 leftButton.addEventListener("pointerdown", event => {
   event.preventDefault();
-  pressGameButton(leftButton, () => playerMove(-1));
+  tapButton(leftButton, () => playerMove(-1));
 });
-
-leftButton.addEventListener("pointerup", () => releaseVisual(leftButton));
-leftButton.addEventListener("pointercancel", () => releaseVisual(leftButton));
-leftButton.addEventListener("pointerleave", () => releaseVisual(leftButton));
 
 rightButton.addEventListener("pointerdown", event => {
   event.preventDefault();
-  pressGameButton(rightButton, () => playerMove(1));
+  tapButton(rightButton, () => playerMove(1));
 });
-
-rightButton.addEventListener("pointerup", () => releaseVisual(rightButton));
-rightButton.addEventListener("pointercancel", () => releaseVisual(rightButton));
-rightButton.addEventListener("pointerleave", () => releaseVisual(rightButton));
 
 upButton.addEventListener("pointerdown", event => {
   event.preventDefault();
-  pressGameButton(upButton, () => playerRotate(1));
+  tapButton(upButton, () => playerRotate(1));
 });
-
-upButton.addEventListener("pointerup", () => releaseVisual(upButton));
-upButton.addEventListener("pointercancel", () => releaseVisual(upButton));
-upButton.addEventListener("pointerleave", () => releaseVisual(upButton));
 
 downButton.addEventListener("pointerdown", event => {
   event.preventDefault();
