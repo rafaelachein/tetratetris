@@ -38,10 +38,10 @@ const timerElement = document.getElementById("timer");
 const levelElement = document.getElementById("level");
 const startScreen = document.getElementById("start-screen");
 
+const upButton = document.getElementById("up-button");
 const leftButton = document.getElementById("left-button");
-const rightButton = document.getElementById("right-button");
-const rotateButton = document.getElementById("rotate-button");
 const downButton = document.getElementById("down-button");
+const rightButton = document.getElementById("right-button");
 
 function createMatrix(w, h) {
   const matrix = [];
@@ -344,31 +344,111 @@ document.addEventListener("keydown", event => {
   }
 });
 
+function pressVisual(button) {
+  button.classList.add("pressed");
+}
+
+function releaseVisual(button) {
+  button.classList.remove("pressed");
+}
+
+function pressGameButton(button, action) {
+  startGame();
+  pressVisual(button);
+  action();
+}
+
+let downHoldInterval = null;
+
+function startDownHold() {
+  startGame();
+  pressVisual(downButton);
+  playerDrop();
+
+  if (downHoldInterval) return;
+
+  downHoldInterval = setInterval(() => {
+    playerDrop();
+  }, 70);
+}
+
+function stopDownHold() {
+  releaseVisual(downButton);
+  clearInterval(downHoldInterval);
+  downHoldInterval = null;
+}
+
+document.addEventListener("keydown", event => {
+  if (!gameStarted) {
+    startGame();
+    return;
+  }
+
+  if (event.key === "ArrowLeft") {
+    playerMove(-1);
+  } else if (event.key === "ArrowRight") {
+    playerMove(1);
+  } else if (event.key === "ArrowDown") {
+    playerDrop();
+  } else if (event.key === "ArrowUp") {
+    playerRotate(1);
+  } else if (event.key === "q" || event.key === "Q") {
+    playerRotate(-1);
+  } else if (event.key === "w" || event.key === "W") {
+    playerRotate(1);
+  }
+});
+
 startScreen.addEventListener("click", startGame);
-startScreen.addEventListener("touchstart", event => {
+
+startScreen.addEventListener("pointerdown", event => {
   event.preventDefault();
   startGame();
 });
 
-leftButton.addEventListener("click", () => pressButton(() => playerMove(-1)));
-rightButton.addEventListener("click", () => pressButton(() => playerMove(1)));
-rotateButton.addEventListener("click", () => pressButton(() => playerRotate(1)));
+leftButton.addEventListener("pointerdown", event => {
+  event.preventDefault();
+  pressGameButton(leftButton, () => playerMove(-1));
+});
 
-downButton.addEventListener("mousedown", startDownHold);
-downButton.addEventListener("mouseup", stopDownHold);
-downButton.addEventListener("mouseleave", stopDownHold);
+leftButton.addEventListener("pointerup", () => releaseVisual(leftButton));
+leftButton.addEventListener("pointercancel", () => releaseVisual(leftButton));
+leftButton.addEventListener("pointerleave", () => releaseVisual(leftButton));
 
-downButton.addEventListener("touchstart", event => {
+rightButton.addEventListener("pointerdown", event => {
+  event.preventDefault();
+  pressGameButton(rightButton, () => playerMove(1));
+});
+
+rightButton.addEventListener("pointerup", () => releaseVisual(rightButton));
+rightButton.addEventListener("pointercancel", () => releaseVisual(rightButton));
+rightButton.addEventListener("pointerleave", () => releaseVisual(rightButton));
+
+upButton.addEventListener("pointerdown", event => {
+  event.preventDefault();
+  pressGameButton(upButton, () => playerRotate(1));
+});
+
+upButton.addEventListener("pointerup", () => releaseVisual(upButton));
+upButton.addEventListener("pointercancel", () => releaseVisual(upButton));
+upButton.addEventListener("pointerleave", () => releaseVisual(upButton));
+
+downButton.addEventListener("pointerdown", event => {
   event.preventDefault();
   startDownHold();
 });
 
-downButton.addEventListener("touchend", event => {
+downButton.addEventListener("pointerup", event => {
   event.preventDefault();
   stopDownHold();
 });
 
-downButton.addEventListener("touchcancel", event => {
+downButton.addEventListener("pointercancel", event => {
+  event.preventDefault();
+  stopDownHold();
+});
+
+downButton.addEventListener("pointerleave", event => {
   event.preventDefault();
   stopDownHold();
 });
