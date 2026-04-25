@@ -312,6 +312,14 @@ function releaseVisual(button) {
   button.classList.remove("pressed");
 }
 
+function pressVisual(button) {
+  button.classList.add("pressed");
+}
+
+function releaseVisual(button) {
+  button.classList.remove("pressed");
+}
+
 function tapButton(button, action) {
   startGame();
   pressVisual(button);
@@ -320,6 +328,48 @@ function tapButton(button, action) {
   setTimeout(() => {
     releaseVisual(button);
   }, 120);
+}
+
+function startLeftHold() {
+  startGame();
+  pressVisual(leftButton);
+  playerMove(-1);
+
+  if (leftHoldInterval) return;
+
+  leftHoldInterval = setInterval(() => {
+    playerMove(-1);
+  }, 90);
+}
+
+function stopLeftHold() {
+  releaseVisual(leftButton);
+
+  if (leftHoldInterval) {
+    clearInterval(leftHoldInterval);
+    leftHoldInterval = null;
+  }
+}
+
+function startRightHold() {
+  startGame();
+  pressVisual(rightButton);
+  playerMove(1);
+
+  if (rightHoldInterval) return;
+
+  rightHoldInterval = setInterval(() => {
+    playerMove(1);
+  }, 90);
+}
+
+function stopRightHold() {
+  releaseVisual(rightButton);
+
+  if (rightHoldInterval) {
+    clearInterval(rightHoldInterval);
+    rightHoldInterval = null;
+  }
 }
 
 function startDownHold() {
@@ -367,12 +417,42 @@ startScreen.addEventListener("pointerdown", event => {
 
 leftButton.addEventListener("pointerdown", event => {
   event.preventDefault();
-  tapButton(leftButton, () => playerMove(-1));
+  startLeftHold();
+});
+
+leftButton.addEventListener("pointerup", event => {
+  event.preventDefault();
+  stopLeftHold();
+});
+
+leftButton.addEventListener("pointercancel", event => {
+  event.preventDefault();
+  stopLeftHold();
+});
+
+leftButton.addEventListener("pointerleave", event => {
+  event.preventDefault();
+  stopLeftHold();
 });
 
 rightButton.addEventListener("pointerdown", event => {
   event.preventDefault();
-  tapButton(rightButton, () => playerMove(1));
+  startRightHold();
+});
+
+rightButton.addEventListener("pointerup", event => {
+  event.preventDefault();
+  stopRightHold();
+});
+
+rightButton.addEventListener("pointercancel", event => {
+  event.preventDefault();
+  stopRightHold();
+});
+
+rightButton.addEventListener("pointerleave", event => {
+  event.preventDefault();
+  stopRightHold();
 });
 
 upButton.addEventListener("pointerdown", event => {
