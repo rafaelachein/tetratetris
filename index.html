@@ -8,24 +8,26 @@
 </head>
 <body>
 
-  <h1>TetraTetris</h1>
+  <main id="game-page">
+    <h1>TetraTetris</h1>
 
-  <div id="score">Score: 0</div>
-  <div id="timer">Time: 00:00:00</div>
-  <div id="level">Level: 1</div>
+    <div id="score">Score: 0</div>
+    <div id="timer">Time: 00:00:00</div>
+    <div id="level">Level: 1</div>
 
-  <div id="game-area">
-    <canvas id="tetris" width="240" height="400"></canvas>
-    <div id="start-screen">Press any key or tap to begin</div>
+    <div id="game-area">
+      <canvas id="tetris" width="240" height="400"></canvas>
+      <div id="start-screen">Press any key or tap to begin</div>
+    </div>
+  </main>
+
+  <div id="mobile-controls">
+    <button id="up-button">↑</button>
+    <button id="left-button">←</button>
+    <button id="down-button">↓</button>
+    <button id="right-button">→</button>
   </div>
 
-<div id="mobile-controls">
-  <button id="up-button">↑</button>
-  <button id="left-button">←</button>
-  <button id="down-button">↓</button>
-  <button id="right-button">→</button>
-</div>
-  
   <script src="script.js"></script>
 
 </body>
