@@ -36,6 +36,11 @@ const timerElement = document.getElementById("timer");
 const levelElement = document.getElementById("level");
 const startScreen = document.getElementById("start-screen");
 
+const leftButton = document.getElementById("left-button");
+const rightButton = document.getElementById("right-button");
+const rotateButton = document.getElementById("rotate-button");
+const downButton = document.getElementById("down-button");
+
 function createMatrix(w, h) {
   const matrix = [];
   while (h--) {
@@ -171,7 +176,19 @@ function draw() {
   drawMatrix(player.matrix, player.pos);
 }
 
+function startGame() {
+  if (!gameStarted) {
+    gameStarted = true;
+    startScreen.style.display = "none";
+    dropCounter = 0;
+    lastTime = performance.now();
+    startTime = performance.now();
+  }
+}
+
 function playerDrop() {
+  if (!gameStarted) return;
+
   player.pos.y++;
 
   if (collide(arena, player)) {
@@ -185,6 +202,8 @@ function playerDrop() {
 }
 
 function playerMove(dir) {
+  if (!gameStarted) return;
+
   player.pos.x += dir;
 
   if (collide(arena, player)) {
@@ -224,6 +243,8 @@ function updateLevel() {
 }
 
 function playerRotate(dir) {
+  if (!gameStarted) return;
+
   const pos = player.pos.x;
   let offset = 1;
 
@@ -281,11 +302,7 @@ function update(time = 0) {
 
 document.addEventListener("keydown", event => {
   if (!gameStarted) {
-    gameStarted = true;
-    startScreen.style.display = "none";
-    dropCounter = 0;
-    lastTime = performance.now();
-    startTime = performance.now();
+    startGame();
     return;
   }
 
@@ -302,6 +319,34 @@ document.addEventListener("keydown", event => {
   } else if (event.key === "w" || event.key === "W") {
     playerRotate(1);
   }
+});
+
+startScreen.addEventListener("click", startGame);
+startScreen.addEventListener("touchstart", startGame);
+
+leftButton.addEventListener("click", () => playerMove(-1));
+rightButton.addEventListener("click", () => playerMove(1));
+rotateButton.addEventListener("click", () => playerRotate(1));
+downButton.addEventListener("click", () => playerDrop());
+
+leftButton.addEventListener("touchstart", event => {
+  event.preventDefault();
+  playerMove(-1);
+});
+
+rightButton.addEventListener("touchstart", event => {
+  event.preventDefault();
+  playerMove(1);
+});
+
+rotateButton.addEventListener("touchstart", event => {
+  event.preventDefault();
+  playerRotate(1);
+});
+
+downButton.addEventListener("touchstart", event => {
+  event.preventDefault();
+  playerDrop();
 });
 
 playerReset();
