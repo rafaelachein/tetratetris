@@ -31,6 +31,8 @@ let startTime = 0;
 let elapsedTime = 0;
 let level = 1;
 
+let downHoldInterval = null;
+
 const scoreElement = document.getElementById("score");
 const timerElement = document.getElementById("timer");
 const levelElement = document.getElementById("level");
@@ -300,6 +302,27 @@ function update(time = 0) {
   requestAnimationFrame(update);
 }
 
+function pressButton(action) {
+  startGame();
+  action();
+}
+
+function startDownHold() {
+  startGame();
+  playerDrop();
+
+  if (downHoldInterval) return;
+
+  downHoldInterval = setInterval(() => {
+    playerDrop();
+  }, 80);
+}
+
+function stopDownHold() {
+  clearInterval(downHoldInterval);
+  downHoldInterval = null;
+}
+
 document.addEventListener("keydown", event => {
   if (!gameStarted) {
     startGame();
@@ -322,31 +345,32 @@ document.addEventListener("keydown", event => {
 });
 
 startScreen.addEventListener("click", startGame);
-startScreen.addEventListener("touchstart", startGame);
-
-leftButton.addEventListener("click", () => playerMove(-1));
-rightButton.addEventListener("click", () => playerMove(1));
-rotateButton.addEventListener("click", () => playerRotate(1));
-downButton.addEventListener("click", () => playerDrop());
-
-leftButton.addEventListener("touchstart", event => {
+startScreen.addEventListener("touchstart", event => {
   event.preventDefault();
-  playerMove(-1);
+  startGame();
 });
 
-rightButton.addEventListener("touchstart", event => {
-  event.preventDefault();
-  playerMove(1);
-});
+leftButton.addEventListener("click", () => pressButton(() => playerMove(-1)));
+rightButton.addEventListener("click", () => pressButton(() => playerMove(1)));
+rotateButton.addEventListener("click", () => pressButton(() => playerRotate(1)));
 
-rotateButton.addEventListener("touchstart", event => {
-  event.preventDefault();
-  playerRotate(1);
-});
+downButton.addEventListener("mousedown", startDownHold);
+downButton.addEventListener("mouseup", stopDownHold);
+downButton.addEventListener("mouseleave", stopDownHold);
 
 downButton.addEventListener("touchstart", event => {
   event.preventDefault();
-  playerDrop();
+  startDownHold();
+});
+
+downButton.addEventListener("touchend", event => {
+  event.preventDefault();
+  stopDownHold();
+});
+
+downButton.addEventListener("touchcancel", event => {
+  event.preventDefault();
+  stopDownHold();
 });
 
 playerReset();
