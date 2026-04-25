@@ -31,6 +31,8 @@ let startTime = 0;
 let elapsedTime = 0;
 let level = 1;
 
+let leftHoldInterval = null;
+let rightHoldInterval = null;
 let downHoldInterval = null;
 
 const scoreElement = document.getElementById("score");
