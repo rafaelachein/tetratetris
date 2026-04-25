@@ -3,29 +3,39 @@ body {
   color: white;
   text-align: center;
   font-family: Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#game-page {
+  width: 100%;
+  padding-top: 20px;
 }
 
 h1 {
   margin-top: 20px;
+  margin-bottom: 25px;
+  font-size: 38px;
 }
 
 #score {
-  font-size: 24px;
+  font-size: 30px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 #timer,
 #level {
-  font-size: 18px;
-  margin: 5px;
+  font-size: 21px;
+  margin: 8px;
 }
 
 #game-area {
   position: relative;
   width: 240px;
   height: 400px;
-  margin: 20px auto 0;
+  margin: 30px auto 0;
 }
 
 canvas {
@@ -51,10 +61,13 @@ canvas {
   box-sizing: border-box;
 }
 
+/* RIGHT-SIDE ARROW KEY CLUSTER */
 #mobile-controls {
-  position: absolute;
-  left: calc(50% + 250px);
-  top: 710px;
+  position: fixed;
+
+  /* This controls the exact spot on the page */
+  right: 38px;
+  top: 610px;
 
   display: grid;
   grid-template-columns: 72px 72px 72px;
@@ -67,12 +80,14 @@ canvas {
 
   touch-action: none;
   user-select: none;
+  z-index: 999;
 }
 
 #mobile-controls button {
   width: 72px;
   height: 72px;
   font-size: 38px;
+  line-height: 1;
   border: 3px solid #777;
   border-radius: 12px;
   background: #eeeeee;
@@ -81,6 +96,7 @@ canvas {
   box-shadow: 4px 4px 0 #777;
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 #mobile-controls button:active,
@@ -106,10 +122,18 @@ canvas {
   grid-area: right;
 }
 
-@media (max-width: 850px) {
+/* Smaller screens: keep it usable */
+@media (max-width: 700px) {
   #mobile-controls {
-    position: static;
-    margin: 24px auto 0;
-    justify-content: center;
+    right: 20px;
+    top: 600px;
+    grid-template-columns: 62px 62px 62px;
+    grid-template-rows: 62px 62px;
+  }
+
+  #mobile-controls button {
+    width: 62px;
+    height: 62px;
+    font-size: 32px;
   }
 }
