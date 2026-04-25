@@ -52,19 +52,28 @@ canvas {
 }
 
 #mobile-controls {
+  display: grid;
+  grid-template-columns: 64px 64px 64px;
+  grid-template-rows: 64px 64px;
+  gap: 8px;
+  justify-content: center;
   margin-top: 20px;
+  touch-action: none;
 }
 
 #mobile-controls button {
-  font-size: 28px;
-  padding: 15px 20px;
-  margin: 5px;
+  font-size: 34px;
   border: none;
-  border-radius: 10px;
-  background: #222;
-  color: white;
+  border-radius: 12px;
+  background: #eee;
+  color: black;
+  box-shadow: 0 4px 0 #999;
+  font-weight: bold;
+  touch-action: none;
+  user-select: none;
 }
 
 #mobile-controls button:active {
-  background: #555;
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #777;
 }
